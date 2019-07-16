@@ -181,6 +181,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 3
+  ScoreCoef: 0
+  Def: 0
+  Spd: 0
+  Scr: 0
+  DefTime: 1
 --- !u!1 &434118074565029669
 GameObject:
   m_ObjectHideFlags: 0

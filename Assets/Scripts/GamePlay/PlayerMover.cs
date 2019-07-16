@@ -10,7 +10,14 @@ public class PlayerMover : MonoBehaviour
     public float Speed;
     public int ScoreCoef;
     public bool Def;
-    private float DefTime;
+    public bool Spd;
+    public bool Scr;
+    public float DefTime;
+
+    private Coroutine _move;
+    private Coroutine _def;
+    private Coroutine _score;
+    private Coroutine _speed;
     
     private void Update()
     {
@@ -26,12 +33,15 @@ public class PlayerMover : MonoBehaviour
         pos = Camera.main.ScreenToWorldPoint(pos);
         pos.z = 0;
         _targetPos = pos;
-        StopAllCoroutines();
+        
+        if(_move!=null)
+        StopCoroutine(_move);
+        
         Vector3 diff = pos - transform.position;
         diff.Normalize();
         float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
-        StartCoroutine(Move());
+        _move = StartCoroutine(Move());
     }
 
     private IEnumerator Move()
@@ -43,19 +53,25 @@ public class PlayerMover : MonoBehaviour
         }
     }
 
-    public IEnumerator DefBuff()
+    public IEnumerator DefBuff(float i)
     {
-        //float i = 1;
-        while (DefTime>0)
-        {
-            yield return null;
-            DefTime -= Time.deltaTime;
-            
-        }
-
+        yield return new WaitForSeconds(i);
         Def = false;
-            //yield return null;
     }
+
+    public IEnumerator SpeedBuff(float i)
+    {
+        yield return new WaitForSeconds(i);
+        Spd = false;
+        Speed /= 3;
+    }
+
+    public IEnumerator ScoreBuff(float i)
+    {
+        yield return new WaitForSeconds(i);
+        Scr = false;
+    }
+
     
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -66,11 +82,38 @@ public class PlayerMover : MonoBehaviour
 
         if (other.GetComponent<DefBuff>())
         {
-            Destroy(other.gameObject);
+            if (_def != null)
+            {
+                _def = null;
+            }
+            Destroy(other.gameObject); 
             Def = true;
-            DefTime = 1;
-            StartCoroutine(DefBuff());
-            
+            _def = StartCoroutine(DefBuff(DefTime));
         }
+        
+        if (other.GetComponent<SpeedBuff>())
+        {
+            if (_speed != null)
+            {
+                _speed  = null;
+            }
+            Destroy(other.gameObject); 
+            Spd = true;
+            Speed *= 3;
+            _speed  = StartCoroutine(SpeedBuff(DefTime));
+        }
+        
+        if (other.GetComponent<ScoreBuff>())
+        {
+            if (_score != null)
+            {
+                _score = null;
+            }
+            Destroy(other.gameObject); 
+            Scr = true;
+            _score = StartCoroutine(ScoreBuff(DefTime));
+        }
+        
+        
     }
 }
