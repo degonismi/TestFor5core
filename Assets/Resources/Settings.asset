@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Settings
   m_EditorClassIdentifier: 
   Speed: 3
-  TimeToScore: 1
+  TimeToScore: 3
   Score: 3
+  BuffTime: 3
   EnemyCount: 1
   EnemySpeed: 0.3
   SpawnDelay: 1.5

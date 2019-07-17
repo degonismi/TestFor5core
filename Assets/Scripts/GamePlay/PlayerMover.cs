@@ -12,13 +12,13 @@ public class PlayerMover : MonoBehaviour
     public bool Def;
     public bool Spd;
     public bool Scr;
-    public float DefTime;
+    public float BuffTime;
 
     private Coroutine _move;
     private Coroutine _def;
     private Coroutine _score;
     private Coroutine _speed;
-    
+
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -69,6 +69,7 @@ public class PlayerMover : MonoBehaviour
     public IEnumerator ScoreBuff(float i)
     {
         yield return new WaitForSeconds(i);
+        ScoreCoef = 1;
         Scr = false;
     }
 
@@ -77,7 +78,15 @@ public class PlayerMover : MonoBehaviour
     {
         if (other.GetComponent<EnemyMover>())
         {
-            Debug.Log("as");
+            if (Def)
+            {
+                Destroy(other.gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+                
+            }
         }
 
         if (other.GetComponent<DefBuff>())
@@ -88,7 +97,7 @@ public class PlayerMover : MonoBehaviour
             }
             Destroy(other.gameObject); 
             Def = true;
-            _def = StartCoroutine(DefBuff(DefTime));
+            _def = StartCoroutine(DefBuff(BuffTime));
         }
         
         if (other.GetComponent<SpeedBuff>())
@@ -100,7 +109,7 @@ public class PlayerMover : MonoBehaviour
             Destroy(other.gameObject); 
             Spd = true;
             Speed *= 3;
-            _speed  = StartCoroutine(SpeedBuff(DefTime));
+            _speed  = StartCoroutine(SpeedBuff(BuffTime));
         }
         
         if (other.GetComponent<ScoreBuff>())
@@ -109,9 +118,10 @@ public class PlayerMover : MonoBehaviour
             {
                 _score = null;
             }
-            Destroy(other.gameObject); 
+            Destroy(other.gameObject);
+            ScoreCoef = 10;
             Scr = true;
-            _score = StartCoroutine(ScoreBuff(DefTime));
+            _score = StartCoroutine(ScoreBuff(BuffTime));
         }
         
         

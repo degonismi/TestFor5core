@@ -10,7 +10,8 @@ public class Settings : ScriptableObject
     [Header("Скорость персонажа")] public float Speed;
     [Header("Задержка получения очков")] public float TimeToScore;
     [Header("Колличество очков")] public int Score;
-
+    [Header("Длительность бафа")] public float BuffTime;
+    
     
     
     [Header("Колличесто врагов")] [Space(50)] public int EnemyCount;

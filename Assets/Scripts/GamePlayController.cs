@@ -43,6 +43,7 @@ public class GamePlayController : MonoBehaviour
         _playerMover = player.GetComponent<PlayerMover>();
         _playerMover.Speed = _settings.Speed;
         _playerMover.ScoreCoef = 1;
+        _playerMover.BuffTime = _settings.BuffTime;
         _playerMover.Def = false;
         _enemySpeed = _settings.EnemySpeed;
         StartCoroutine(SpawnEnemy());
