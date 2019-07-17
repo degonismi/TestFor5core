@@ -21,6 +21,8 @@ public class GamePlayController : MonoBehaviour
     [SerializeField] private GameObject[] _buffs;
     [SerializeField] private Text _scoreText;
     [SerializeField] private Text _timeText;
+
+    private GameObject Par;
     
     private float _enemySpeed;
     private float _startTime;
@@ -29,16 +31,23 @@ public class GamePlayController : MonoBehaviour
     private void OnEnable()
     {
         StartGames();
+        _scoreText.text = 0.ToString();
     }
 
+    
+    
     private void OnDisable()
     {
+        PlayerPrefs.SetInt("Score", Score);
+        GetComponentInParent<Saver>().PlayerScore = Score;
         StopAllCoroutines();
+        Destroy(Par);
     }
 
     private void StartGames()
     {
         GameObject player = Instantiate(_player);
+        Par = new GameObject();
         _playerTransform = player.transform;
         _playerMover = player.GetComponent<PlayerMover>();
         _playerMover.Speed = _settings.Speed;
@@ -89,6 +98,7 @@ public class GamePlayController : MonoBehaviour
             while (i>0)
             {
                 GameObject e = Instantiate(_enemy,GetRandomPos(), Quaternion.identity);
+                e.transform.SetParent(Par.transform);
                 e.GetComponent<EnemyMover>().Speed = _enemySpeed;
                 i--;
             }
@@ -111,7 +121,8 @@ public class GamePlayController : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(_timeToBuffSpawn);
-            Instantiate(_buffs[Random.Range(0, 3)], GetBuffPos(), Quaternion.identity);
+            GameObject e = Instantiate(_buffs[Random.Range(0, 3)], GetBuffPos(), Quaternion.identity);
+            e.transform.SetParent(Par.transform);
         }
     }
     

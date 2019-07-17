@@ -9,6 +9,8 @@ public class Score : MonoBehaviour
     private string _name;
     private int _score;
 
+    [SerializeField] private Text _scoreText;
+
     [SerializeField] private Text[] _texts;
     
     private void OnDisable()
@@ -22,4 +24,15 @@ public class Score : MonoBehaviour
         Saver.instance.PlayerName = _name;
         Saver.instance.SaveUser();
     }
+
+    private void OnEnable()
+    {
+        Invoke("RefreshScore", 0.1f);
+    }
+
+    private void RefreshScore()
+    {
+        _scoreText.text = GetComponentInParent<Saver>().PlayerScore.ToString();
+    }
+    
 }

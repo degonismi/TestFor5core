@@ -14,6 +14,8 @@ public class PlayerMover : MonoBehaviour
     public bool Scr;
     public float BuffTime;
 
+    [SerializeField] private GameObject _defSprite;
+    
     private Coroutine _move;
     private Coroutine _def;
     private Coroutine _score;
@@ -57,6 +59,7 @@ public class PlayerMover : MonoBehaviour
     {
         yield return new WaitForSeconds(i);
         Def = false;
+        _defSprite.SetActive(false);
     }
 
     public IEnumerator SpeedBuff(float i)
@@ -73,7 +76,12 @@ public class PlayerMover : MonoBehaviour
         Scr = false;
     }
 
-    
+
+    private void OnDisable()
+    {
+        FindObjectOfType<Saver>().GetComponent<Animator>().SetTrigger("Score");
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.GetComponent<EnemyMover>())
@@ -95,6 +103,7 @@ public class PlayerMover : MonoBehaviour
             {
                 _def = null;
             }
+            _defSprite.SetActive(true);
             Destroy(other.gameObject); 
             Def = true;
             _def = StartCoroutine(DefBuff(BuffTime));
